@@ -1,4 +1,4 @@
-package heatmap
+package heatmapper
 
 import (
 	"archive/zip"
@@ -34,12 +34,12 @@ const kml = kmlStart + kmlOverlay + kmlEnd
 func KML(size image.Rectangle, points []DataPoint, dotSize int, opacity uint8,
 	scheme []color.Color, imgurl string, out io.Writer) (image.Image, error) {
 
-	limits := findLimits(points)
+	limits := FindLimits(points)
 	if !limits.inRange(-180, 180, -90, 90) {
 		return nil, errors.New("limits out of range")
 	}
 
-	mapimg := Heatmap(size, points, dotSize, opacity, scheme)
+	mapimg := Heatmap(size, limits, points, dotSize, opacity, scheme)
 
 	adjustedLimits := adjustLimits(limits, size, dotSize)
 
@@ -79,7 +79,7 @@ func KMZ(size image.Rectangle, points []DataPoint, dotSize int, opacity uint8,
 	return png.Encode(imgf, img)
 }
 
-func adjustLimits(limits limits, size image.Rectangle, dotSize int) (rv limits) {
+func adjustLimits(limits Limits, size image.Rectangle, dotSize int) (rv Limits) {
 	halfdot := float64(dotSize) / 2.0
 	offx := (halfdot / float64(size.Dx()-dotSize)) * float64(limits.Dx())
 	offy := (halfdot / float64(size.Dy()-dotSize)) * float64(limits.Dy())

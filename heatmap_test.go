@@ -1,4 +1,4 @@
-package heatmap
+package heatmapper
 
 import (
 	"image"
@@ -29,7 +29,7 @@ func assertEpsilon(t *testing.T, field string, expected, got float64) {
 	}
 }
 func TestFindLimits(t *testing.T) {
-	l := findLimits(testPoints)
+	l := FindLimits(testPoints)
 
 	assertEpsilon(t, "minx", 0.005923822722460793, l.Min.X())
 	assertEpsilon(t, "miny", 0.0038807964380815894, l.Min.Y())
@@ -49,7 +49,7 @@ func TestHeatmapKMLLimits(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		lim := findLimits([]DataPoint{test})
+		lim := FindLimits([]DataPoint{test})
 		if lim.inRange(-180, 180, -90, 90) {
 			t.Errorf("Expected out of range on %v", test)
 		}
@@ -59,8 +59,9 @@ func TestHeatmapKMLLimits(t *testing.T) {
 const expHash = uint64(62624876249118208)
 
 func TestMkImage(t *testing.T) {
+	l := FindLimits(testPoints)
 	got := imghash.Average(Heatmap(image.Rect(0, 0, 1024, 1024),
-		testPoints, 150, 128, schemes.AlphaFire))
+		l, testPoints, 150, 128, schemes.AlphaFire))
 	if got != expHash {
 		t.Errorf("Expected hash = %v, got %v", expHash, got)
 	}
@@ -80,7 +81,7 @@ func TestMust(t *testing.T) {
 
 func BenchmarkPlacement(b *testing.B) {
 	b.StopTimer()
-	l := findLimits(testPoints)
+	l := FindLimits(testPoints)
 	size := image.Rect(0, 0, 4096, 4096)
 	dot := mkDot(float64(100))
 	b.StartTimer()
@@ -97,7 +98,7 @@ func BenchmarkPlacement(b *testing.B) {
 func BenchmarkWarming(b *testing.B) {
 	b.StopTimer()
 
-	l := findLimits(testPoints)
+	l := FindLimits(testPoints)
 	size := image.Rect(0, 0, 4096, 4096)
 	dot := mkDot(float64(100))
 	colors := schemes.AlphaFire
@@ -116,7 +117,7 @@ func BenchmarkWarming(b *testing.B) {
 }
 
 func BenchmarkWarmingParallel(b *testing.B) {
-	l := findLimits(testPoints)
+	l := FindLimits(testPoints)
 	size := image.Rect(0, 0, 4096, 4096)
 	dot := mkDot(float64(100))
 	colors := schemes.AlphaFire

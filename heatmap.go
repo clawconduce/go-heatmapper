@@ -1,5 +1,5 @@
 // Package heatmap generates heatmaps for map overlays.
-package heatmap
+package heatmapper
 
 import (
 	"image"
@@ -61,12 +61,10 @@ func (l limits) Dy() float64 {
 // dotSize is the impact size of each point on the output
 // opacity is the alpha value (0-255) of the impact of the image overlay
 // scheme is the color palette to choose from the overlay
-func Heatmap(size image.Rectangle, points []DataPoint, dotSize int, opacity uint8,
+func Heatmap(size image.Rectangle, limits Limits, points []DataPoint, dotSize int, opacity uint8,
 	scheme []color.Color) image.Image {
 
 	dot := mkDot(float64(dotSize))
-
-	limits := findLimits(points)
 
 	// Draw black/alpha into the image
 	bw := image.NewRGBA(size)

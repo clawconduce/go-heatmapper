@@ -6,8 +6,8 @@ import (
 	"math/rand"
 	"os"
 
-	"github.com/dustin/go-heatmap"
-	"github.com/dustin/go-heatmap/schemes"
+	heatmap "github.com/ConduceInc/go-heatmapper"
+	"github.com/ConduceInc/go-heatmapper/schemes"
 )
 
 func main() {

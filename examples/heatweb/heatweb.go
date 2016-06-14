@@ -11,8 +11,8 @@ import (
 	"net/url"
 	"strconv"
 
-	"github.com/dustin/go-heatmap"
-	"github.com/dustin/go-heatmap/schemes"
+	heatmap "github.com/ConduceInc/go-heatmapper"
+	"github.com/ConduceInc/go-heatmapper/schemes"
 )
 
 const maxInputLength = 10000

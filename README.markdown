@@ -1,3 +1,11 @@
+# Heatmapper
+
+This is a fork of the go-heatmaps project but with the addition of
+2 features that break the API:
+
+- Ability to specify extent of the heatmap using the same coordinate sytem as the input points
+- Support for weighted points
+
 # Heatmaps
 
 This is a toolkit for creating [heatmaps][heatmap].  Heatmaps are
