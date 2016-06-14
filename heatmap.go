@@ -35,23 +35,23 @@ func P(x, y float64) DataPoint {
 	return apoint{x, y}
 }
 
-type limits struct {
+type Limits struct {
 	Min DataPoint
 	Max DataPoint
 }
 
-func (l limits) inRange(lx, hx, ly, hy float64) bool {
+func (l Limits) inRange(lx, hx, ly, hy float64) bool {
 	return l.Min.X() >= lx &&
 		l.Max.X() <= hx &&
 		l.Min.Y() >= ly &&
 		l.Max.Y() <= hy
 }
 
-func (l limits) Dx() float64 {
+func (l Limits) Dx() float64 {
 	return l.Max.X() - l.Min.X()
 }
 
-func (l limits) Dy() float64 {
+func (l Limits) Dy() float64 {
 	return l.Max.Y() - l.Min.Y()
 }
 
@@ -77,7 +77,7 @@ func Heatmap(size image.Rectangle, limits Limits, points []DataPoint, dotSize in
 	return rv
 }
 
-func placePoints(size image.Rectangle, limits limits,
+func placePoints(size image.Rectangle, limits Limits,
 	bw *image.RGBA, points []DataPoint, dot draw.Image) {
 	for _, p := range points {
 		limits.placePoint(p, bw, dot)
@@ -116,7 +116,7 @@ func warm(out, in draw.Image, opacity uint8, colors []color.Color) {
 	wg.Wait()
 }
 
-func findLimits(points []DataPoint) limits {
+func FindLimits(points []DataPoint) Limits {
 	minx, miny := points[0].X(), points[0].Y()
 	maxx, maxy := minx, miny
 
@@ -127,7 +127,7 @@ func findLimits(points []DataPoint) limits {
 		maxy = math.Max(p.Y(), maxy)
 	}
 
-	return limits{apoint{minx, miny}, apoint{maxx, maxy}}
+	return Limits{apoint{minx, miny}, apoint{maxx, maxy}}
 }
 
 func mkDot(size float64) draw.Image {
@@ -148,7 +148,7 @@ func mkDot(size float64) draw.Image {
 	return i
 }
 
-func (l limits) translate(p DataPoint, i draw.Image, dotsize int) (rv image.Point) {
+func (l Limits) translate(p DataPoint, i draw.Image, dotsize int) (rv image.Point) {
 	// Normalize to 0-1
 	x := float64(p.X()-l.Min.X()) / float64(l.Dx())
 	y := float64(p.Y()-l.Min.Y()) / float64(l.Dy())
@@ -160,7 +160,7 @@ func (l limits) translate(p DataPoint, i draw.Image, dotsize int) (rv image.Poin
 	return
 }
 
-func (l limits) placePoint(p DataPoint, i, dot draw.Image) {
+func (l Limits) placePoint(p DataPoint, i, dot draw.Image) {
 	pos := l.translate(p, i, dot.Bounds().Max.X)
 	dotw, doth := dot.Bounds().Max.X, dot.Bounds().Max.Y
 	draw.Draw(i, image.Rect(pos.X, pos.Y, pos.X+dotw, pos.Y+doth), dot,

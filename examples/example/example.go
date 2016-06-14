@@ -20,7 +20,8 @@ func main() {
 	// scheme, _ := schemes.FromImage("../schemes/fire.png")
 	scheme := schemes.AlphaFire
 
+	l := heatmap.FindLimits(points)
 	img := heatmap.Heatmap(image.Rect(0, 0, 1024, 1024),
-		points, 150, 128, scheme)
+		l, points, 150, 128, scheme)
 	png.Encode(os.Stdout, img)
 }
